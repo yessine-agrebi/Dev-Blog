@@ -1,30 +1,21 @@
-const express = require('express');
-const createError = require('http-errors');
-const morgan = require('morgan');
-require('dotenv').config();
-
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import cors from 'cors';
+dotenv.config();
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(morgan('dev'));
+const port = process.env.PORT;
+//BodyParser Middleware --> to use req.body
 
-app.get('/', async (req, res, next) => {
-  res.send({ message: 'Awesome it works 🐻' });
-});
-
-app.use('/api', require('./routes/api.route'));
-
-app.use((req, res, next) => {
-  next(createError.NotFound());
-});
-
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.send({
-    status: err.status || 500,
-    message: err.message,
+mongoose
+  .connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+  })
+  .then(() => console.log('connexion reussie'))
+  .catch((err) => {
+    console.log('Impossible de se connecter à la base de données', err);
+    process.exit();
   });
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT}`));
+app.use(express.json({ limit: '20mb' }));
+app.use(cors());
+app.listen(port, () => console.log(`server running on port ${port}`));
