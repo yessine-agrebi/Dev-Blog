@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const { ObjectId } = mongoose.Schema;
 
 const postSchema = new mongoose.Schema(
@@ -13,23 +13,23 @@ const postSchema = new mongoose.Schema(
       lowercase: true,
     },
     content: {},
-    categories: [{ type: ObjectId, ref: "Category" }],
-    featuredImage: { type: ObjectId, ref: "Media" },
+    categories: [{ type: ObjectId, ref: 'Category' }],
+    featuredImage: { type: String },
     published: {
       type: Boolean,
       default: true,
     },
     postedBy: {
       type: ObjectId,
-      ref: "User",
+      ref: 'User',
     },
-    rating:{
-      type:Number,
-      min:1,
-      max:5
-    }
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+    },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Post", postSchema);
+export default mongoose.model('Post', postSchema);
