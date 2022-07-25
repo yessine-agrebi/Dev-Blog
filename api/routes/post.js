@@ -45,7 +45,7 @@ Postroute.post("/upload-image", uploadImage);
 //   uploadImageFile
 // );
 Postroute.post("/create-post",  createPost);
-Postroute.get("/posts-for-admin", postsForAdmin);
+Postroute.get("/", postsForAdmin);
 Postroute.get("/posts/:page", posts);
 Postroute.get("/post/:slug", singlePost);
 Postroute.put("/post/:postId",   editPost);

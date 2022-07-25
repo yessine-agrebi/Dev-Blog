@@ -24,5 +24,4 @@ app.use(cors());
 app.use('/api/categories', categoryRoute);
 app.use('/api/posts', Postroute);
 
-
 app.listen(port, () => console.log(`server running on port ${port}`));

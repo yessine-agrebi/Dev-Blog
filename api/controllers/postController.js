@@ -32,52 +32,53 @@ export const uploadImage = async (req, res) => {
       res.send(result);
     };
 };
-export const createPost = async (req, res) => {
-  console.log('createPost', req.body);
+export const createPost = async (request, response) => {
   try {
-    const { title, content, categories } = req.body;
-    // check if title is taken
-    const alreadyExist = await Post.findOne({
-      slug: slugify(title),
-    }).exec();
-    if (alreadyExist) return res.json({ error: 'Title is taken' });
+      const post = await new Post(request.body);
+      // try {
+      //   const alreadyExist = await Post.findOne({
+      //     slug: slugify(title),
+      //    }).exec();
+      //   if (alreadyExist) return res.json({ error: 'Title is taken' });
+      // } catch (error) {
+      //   response.status(500).json(error);
 
-    // get category ids based on category name
-    let ids = [];
-    for (let i = 0; i < categories.length; i++) {
-      Category.findOne({ name: categories[i] }).exec((err, c) => {
-        if (err) {
-          console.log(err);
-        }
-        // console.log("c", c._id);
-        ids.push(c._id);
-      });
-    }
-    // save post
-    setTimeout(async () => {
-      const newPost = await new Post({
-        ...req.body,
-        slug: slugify(title),
-        categories: ids,
-        postedBy: req.user._id,
-      }).save();
+      // }
+    
+      post.save();
 
-      // push post id to user's posts array
-      await User.findByIdAndUpdate(req.user._id, {
-        $addToSet: { posts: newPost._id },
-      });
-      return res.json(newPost);
-    }, 1000);
-  } catch (err) {
-    console.log(err);
-    res.sendStatus(400);
-  }
-};
+      response.status(200).json(post);
+  } catch (error) {
+    return res.send({message:'Title is taken'}  );  }
+}
+// export const createPost = async (req, res) => {
+//   const post = await new Post(request.body);
+
+//   try {
+//    // check if title is taken
+//     const alreadyExist = await Post.findOne({
+//       slug: slugify(title),
+//     }).exec();
+//     if (alreadyExist) return res.json({ error: 'Title is taken' });
+
+
+//     // push post id to user's posts array
+//     // await User.findByIdAndUpdate(req.user._id, {
+//     //   $addToSet: { posts: newPost._id },
+//     // });
+//     post.save();
+//     response.status(200).json('Post saved successfully');
+
+//   } catch (err) {
+//     console.log(err);
+//     res.sendStatus(400);
+//   }
+// };
 export const postsByAuthor = async (req, res) => {
   try {
     const posts = await Post.find({ postedBy: req.user._id })
-      .populate("postedBy", "_id name")
-      .populate("categories", "_id name slug")
+      .populate('postedBy', '_id name')
+      .populate('categories', '_id name slug')
       .sort({ createdAt: -1 })
       .exec();
     return res.json(posts);
