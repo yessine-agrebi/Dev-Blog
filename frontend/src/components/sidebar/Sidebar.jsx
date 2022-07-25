@@ -47,10 +47,10 @@ export default function Sidebar() {
                 Users
               </li>
             </Link>
-            <Link to="/products" className="link">
+            <Link to="/category" className="link">
               <li className="sidebarListItem">
                 <Storefront className="sidebarIcon" />
-                Products
+                Category
               </li>
             </Link>
             <li className="sidebarListItem">
